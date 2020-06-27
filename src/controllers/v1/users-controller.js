@@ -30,6 +30,11 @@ const createUser = async (req, res) => {
 
     res.send({ status: 'OK', message: 'user created' });
   } catch (error) {
+    if (error.code && error.code === 11000) {
+      res.status(500).send({ status: 'DUPLICATED USER', message: error.keyValue });
+      return;
+    }
+    console.log('error message: ', error);
     res.status(500).send({ status: 'ERROR', message: error.message });
   }
 };

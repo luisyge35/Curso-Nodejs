@@ -11,18 +11,18 @@
   "author": "Luis Yague",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.0.0",
+    "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",
-    "countries-list": "^2.5.4",
+    "countries-list": "^2.5.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.20",
-    "moongoose": "0.0.5"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.20"
   },
   "devDependencies": {
-    "eslint": "^7.3.1",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.21.2",
-    "nodemon": "^2.0.4"
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "nodemon": "^2.0.2"
   }
 }

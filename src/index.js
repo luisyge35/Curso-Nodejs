@@ -1,14 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const mongoose = require('moongoose');
-//const mongo = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
 const routesV1 = require('./routes/v1/index');
 
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(bodyParser.json());
 console.log('MONGO: ', process.env.MONGO);
 routesV1(app);
