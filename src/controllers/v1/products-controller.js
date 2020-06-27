@@ -17,12 +17,22 @@ const createProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = (req,res) => {};
+const deleteProduct = (req, res) => {};
 
-const getProducts = async (req,res) => {
+const getProducts = async (req, res) => {
   try {
-    const products = await Products.find().populate('user', 'username email data role');
+    const products = await Products.find().populate('user', 'username email data role').select('title desc price');
     res.send({ status: 'OK', products });
+  } catch (error) {
+    res.status(500).send({ status: 'ERROR', data: error.message });
+  }
+};
+
+const getProductsbyUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const products = await Products.find({ user: userId }).populate('user', 'username email data role').select('title desc price');
+    res.send({ status: 'OK', data: products });
   } catch (error) {
     res.status(500).send({ status: 'ERROR', data: error.message });
   }
@@ -32,4 +42,5 @@ module.exports = {
   createProduct,
   deleteProduct,
   getProducts,
+  getProductsbyUser,
 };
