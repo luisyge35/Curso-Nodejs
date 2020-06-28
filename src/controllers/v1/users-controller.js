@@ -1,5 +1,36 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const Users = require('../../mongo/models/users.js');
+
+const expiretime = 60 * 10;
+
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await Users.findOne({ email });
+    // eslint-disable-next-line no-empty
+    if (user) {
+      const isOk = await bcrypt.compare(password, user.password);
+      if (isOk) {
+        // eslint-disable-next-line no-underscore-dangle
+        const token = jwt.sign({ userid: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: expiretime });
+        res.send({
+          status: 'OK',
+          data: {
+            token,
+            expiresIn_s: expiretime,
+          },
+        });
+      } else {
+        res.status(403).send({ status: 'ERROR', message: 'Wrong password' });
+      }
+    } else {
+      res.status(401).send({ status: 'ERROR', message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).send({ status: 'ERROR', message: error.message });
+  }
+};
 
 const createUser = async (req, res) => {
   try {
@@ -12,13 +43,6 @@ const createUser = async (req, res) => {
     console.log('data: ', data);
 
     const hash = await bcrypt.hash(password, 15);
-
-    // await Users.create({
-    //   username,
-    //   email,
-    //   data,
-    //   password: hash,
-    // });
 
     const user = new Users();
     user.username = username;
@@ -51,12 +75,16 @@ const updateUser = async (req,res) => {
       email,
       data,
     });
-    res.send({ status: 'OK', message: 'user updated' });
+    res.send({ status: 'OK', message: user });
   } catch (error) {
     res.status(500).send('message', error.message);
   }
 };
 
 module.exports = {
-  createUser, deleteUser, getUsers, updateUser,
+  createUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+  login,
 };
