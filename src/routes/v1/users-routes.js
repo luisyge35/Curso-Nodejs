@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/create', usersController.createUser);
 router.post('/update', middleware.isvalidHostname, middleware.isAuth, usersController.updateUser);
-router.post('/delete', middleware.isvalidHostname, usersController.deleteUser);
+router.post('/delete', middleware.isvalidHostname, middleware.isAuth, middleware.isAdmin, usersController.deleteUser);
 router.post('/login', usersController.login);
 router.get('/get-all', usersController.getUsers);
 

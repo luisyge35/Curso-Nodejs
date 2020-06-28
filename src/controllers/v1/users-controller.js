@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Users = require('../../mongo/models/users.js');
 
-const expiretime = 60 * 10;
+const expiretime = 600 * 10;
 
 const login = async (req, res) => {
   try {
@@ -12,8 +12,9 @@ const login = async (req, res) => {
     if (user) {
       const isOk = await bcrypt.compare(password, user.password);
       if (isOk) {
+        console.log('USER: ', user);
         // eslint-disable-next-line no-underscore-dangle
-        const token = jwt.sign({ userid: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: expiretime });
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: expiretime });
         res.send({
           status: 'OK',
           data: {
@@ -63,14 +64,26 @@ const createUser = async (req, res) => {
   }
 };
 
-const deleteUser = (req,res) => {};
+const deleteUser = async (req,res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId){
+      throw new Error('missing userId');
+    }
+    await Users.findByIdAndDelete(userId);
+    console.log(req.body);
+    res.send({status: 'OK', mesage: 'userdeleted'})
+  } catch (error) {
+    res.status(400).send({status: 'ERROR'});
+  }
+};
 
 const getUsers = (req,res) => {};
 
 const updateUser = async (req,res) => {
   try {
-    const { username, email, data, userId } = req.body;
-    const user = await Users.findByIdAndUpdate(userId, {
+    const { username, email, data } = req.body;
+    const user = await Users.findByIdAndUpdate(req.sessionData.userId, {
       username,
       email,
       data,
