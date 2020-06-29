@@ -71,7 +71,6 @@ const deleteUser = async (req,res) => {
       throw new Error('missing userId');
     }
     await Users.findByIdAndDelete(userId);
-    console.log(req.body);
     res.send({status: 'OK', mesage: 'userdeleted'})
   } catch (error) {
     res.status(400).send({status: 'ERROR'});
