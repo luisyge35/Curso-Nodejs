@@ -1,9 +1,7 @@
 /* eslint-disable import/no-unresolved */
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
-
-const productSchema = new Schema({
+import mongoose, {Document, model, Schema}  from 'mongoose';
+ 
+const productSchema: Schema = new Schema({
   title: { type: String, required: true },
   desc: { type: String, required: true },
   price: { type: Number, required: true },
@@ -13,6 +11,6 @@ const productSchema = new Schema({
   timestamps: true,
 });
 
-const model = mongoose.model('Product', productSchema);
+//const model: model = mongoose.model('Product', productSchema);
 
-module.exports = model;
+//module.exports = model;
